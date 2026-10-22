@@ -96,7 +96,7 @@ Do not convert this into a monorepo. One Next app per trade.
 
 | | |
 | --- | --- |
-| **Input** | Phone, email, hours, CTAs, `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`. |
+| **Input** | Phone, email, hours, CTAs, `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, optional `CONTACT_TO_EMAIL`. |
 | **Files** | `data/siteConfig.ts`, `data/navigation.ts` if labels change, env. API already reads `siteConfig.phoneDisplay`. |
 | **Validation** | `tel:` href matches `phoneTel`. Form POST succeeds in a test send. Sticky header call and Final CTA use the same number. Email arrives at the intended inbox. |
 | **Failure** | Previous phone/email remain in `siteConfig`. Form 500 because env is missing. |

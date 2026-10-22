@@ -1,9 +1,20 @@
 import { siteConfig } from "@/data/siteConfig";
+import { getContactToEmail, isContactEmailConfigured } from "@/lib/contact/env";
 import type { ContactSubmission } from "@/lib/contact/validation";
+
+function formatTrackingBlock(data: ContactSubmission): string[] {
+  const lines: string[] = [];
+  if (data.utmSource) lines.push(`UTM Source: ${data.utmSource}`);
+  if (data.utmMedium) lines.push(`UTM Medium: ${data.utmMedium}`);
+  if (data.utmCampaign) lines.push(`UTM Campaign: ${data.utmCampaign}`);
+  if (data.gclid) lines.push(`GCLID: ${data.gclid}`);
+  if (lines.length === 0) return [];
+  return ["", "Campaign / tracking:", ...lines];
+}
 
 function formatContactEmail(data: ContactSubmission, submittedAt: string) {
   return [
-    "NEW JDM CONTACT MESSAGE",
+    `NEW ${siteConfig.businessName.toUpperCase()} CONTACT MESSAGE`,
     "",
     "First Name:",
     data.firstName,
@@ -28,6 +39,7 @@ function formatContactEmail(data: ContactSubmission, submittedAt: string) {
     "",
     "Source:",
     "Contact Page",
+    ...formatTrackingBlock(data),
   ].join("\n");
 }
 
@@ -50,9 +62,9 @@ async function sendWithResend(
     },
     body: JSON.stringify({
       from,
-      to: [siteConfig.email],
+      to: [getContactToEmail()],
       reply_to: data.email,
-      subject: `[JDM Contact] ${data.firstName} ${data.lastName}`,
+      subject: `[${siteConfig.businessName} Contact] ${data.firstName} ${data.lastName}`,
       text: formatContactEmail(data, submittedAt),
     }),
   });
@@ -80,12 +92,13 @@ async function sendWithResend(
 export async function sendContactEmail(data: ContactSubmission) {
   const submittedAt = new Date().toISOString();
 
-  if (!process.env.RESEND_API_KEY || !process.env.CONTACT_FROM_EMAIL) {
+  if (!isContactEmailConfigured()) {
     if (process.env.NODE_ENV === "production") {
       throw new Error("Email provider is not configured.");
     }
 
     console.info("[contact] Email provider not configured. Development log:");
+    console.info(`Would deliver to: ${getContactToEmail()}`);
     console.info(formatContactEmail(data, submittedAt));
     return;
   }

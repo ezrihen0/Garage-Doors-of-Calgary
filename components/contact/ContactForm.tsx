@@ -9,6 +9,7 @@ import {
   NAME_MAX,
   PHONE_MAX,
   PHONE_REGEX,
+  EMAIL_REGEX,
   type ContactField,
   type ContactTracking,
 } from "@/lib/contact/validation";
@@ -100,6 +101,9 @@ export function ContactForm({ tracking }: { tracking: ContactTracking }) {
     }
     if (!address) nextErrors.address = "Address is required.";
     if (!email) nextErrors.email = "Email is required.";
+    else if (!EMAIL_REGEX.test(email)) {
+      nextErrors.email = "Enter a valid email address.";
+    }
     if (!message) nextErrors.message = "Message is required.";
 
     return nextErrors;

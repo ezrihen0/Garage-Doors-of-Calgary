@@ -44,7 +44,7 @@ Facts that change per trade but are structured, not prose.
 | Metrics | `data/metrics.ts` (experience, hours, and radius derived from `siteConfig`) |
 | Domain / canonical host | `getSiteUrl()` → `NEXT_PUBLIC_SITE_URL` with localhost fallback; `metadataBase` + page `alternates.canonical` |
 | Sitemap / robots | `app/sitemap.ts`, `app/robots.ts` (indexable paths from `data/navigation.ts`) |
-| Email delivery | `RESEND_API_KEY`, `CONTACT_FROM_EMAIL` |
+| Email delivery | `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, optional `CONTACT_TO_EMAIL` (defaults to `siteConfig.email`) |
 
 There is **no** `vertical.json` or config engine yet. These TypeScript modules are the current stand-in. The desired contract is in [VERTICAL_SCHEMA.md](./VERTICAL_SCHEMA.md).
 
