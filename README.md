@@ -40,6 +40,20 @@ In **development**, if `RESEND_API_KEY` or `CONTACT_FROM_EMAIL` is missing, the 
 
 In **production**, missing email configuration returns HTTP 502 so misconfiguration is visible.
 
+### Quick setup without a custom domain (Vercel + Resend)
+
+Use this when you do not have a verified sending domain yet. Resend’s shared onboarding sender can deliver contact notifications to your Gmail inbox.
+
+1. Sign up at [resend.com](https://resend.com) using **`jdmsolutionscalgary@gmail.com`** (the same address shown on the site and used as the default `CONTACT_TO_EMAIL`).
+2. Create an API key in the Resend dashboard.
+3. In **Vercel** → Project → **Settings** → **Environment Variables**, add:
+   - `RESEND_API_KEY` — your `re_…` key
+   - `CONTACT_FROM_EMAIL` — `JDM Solutions <onboarding@resend.dev>`
+4. Redeploy the project so the new variables apply.
+5. Submit a test message on `/contact` and confirm it arrives at **`jdmsolutionscalgary@gmail.com`** (or at `CONTACT_TO_EMAIL` if you set that).
+
+Optional: set `CONTACT_TO_EMAIL` if you want submissions sent somewhere other than the default inbox. Later, verify your own domain in Resend and change `CONTACT_FROM_EMAIL` to an address on that domain (e.g. `JDM Solution <hello@yourdomain.com>`).
+
 ### How to test
 
 1. **Local without Resend** — Start `npm run dev`, submit the form at `/contact`. Expect “Message Sent” and a log block in the terminal including `Would deliver to: …`.
